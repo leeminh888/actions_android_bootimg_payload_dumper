@@ -5,7 +5,8 @@ on:
     types: [started]
     
 env:
-  ROM_URL: https://hugeota.d.miui.com/21.4.13/miui_ALIOTH_21.4.13_6e7102ba04_11.0.zip
+  ROM_URL: https://bigota.d.miui.com/21.11.24/miui_ARES_21.11.24_bf9b3a2526_12.0.zip
+  ZIP_NAME: Ares
   TZ: Asia/Shanghai
 
 jobs:
@@ -46,18 +47,19 @@ jobs:
     - name: unzip the ROM
       run: |
        cd ~
-       unzip rom.zip -d payload_dumper
+       unzip *.zip -d payload_dumper
     
     - name: extract the payload.bin
       run: |
        cd ~
        cd payload_dumper
        python payload_dumper.py payload.bin
+       mkdir temp
+       sudo cp -r payload_dumper/$ZIP_NAME.zip temp
    
 
     
     - name: Upload the bootimg to WeTransfer
       run: |
-        cd ~
-        curl -sL https://git.io/file-transfer | sh
-        ./transfer wet ~/payload_dumper/output/boot.img
+        cd temp
+        curl --upload-file $Zip_name https://transfer.sh/"$Zip_name"
